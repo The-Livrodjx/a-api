@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { mysqlConfig } from './configs/mysql.config';
 import { UsersModule } from './users/users.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { MediasModule } from './medias/medias.module';
 
 @Module({
   imports: [
@@ -19,9 +20,11 @@ import { ThrottlerModule } from '@nestjs/throttler';
       username: mysqlConfig.username,
       password: mysqlConfig.password,
       database: mysqlConfig.database,
-      synchronize: mysqlConfig.synchronize
+      synchronize: mysqlConfig.synchronize,
+      entities: [__dirname + '/**/*.entity{.ts,.js}']
     }),
-    UsersModule
+    UsersModule,
+    MediasModule
   ],
   controllers: [AppController],
   providers: [AppService],

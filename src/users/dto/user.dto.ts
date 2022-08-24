@@ -14,6 +14,8 @@ export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
   password: string;
+
+  ip?: string;
 }
 
 export class UserLogin {

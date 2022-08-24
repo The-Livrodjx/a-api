@@ -1,10 +1,65 @@
+import { HttpException, HttpStatus } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/user.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { hashSync } from 'bcrypt';
+import { AuthService } from 'src/auth/auth.service';
+import { DeepPartial, Repository } from 'typeorm';
+import { CreateUserDto, LoginReturn } from './dto/user.dto';
+import { Users } from './entities/user.entity';
 
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+
+  constructor(
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
+    private authService: AuthService
+  ) {};
+
+  async create(body: CreateUserDto, ip: string): Promise<LoginReturn> {
+    const { email } = body;
+    
+    let user = await this.usersRepository.findOne({
+      where: {
+        email: email
+      }
+    });
+
+    if(!user) {
+      body.password = hashSync(body.password, 10);
+      body.ip = ip;
+
+      let newUser = await this.usersRepository.save(
+        this.usersRepository.create(body as DeepPartial<Users>)
+      );
+
+      return {
+        token: this.authService.jwtSign({
+          email,
+          username: newUser.name,
+        }),
+        username: newUser.name,
+        email: newUser.email
+      };
+    }
+
+    throw new HttpException({
+      msg: "User already exists",
+      error: "Not acceptable"
+    }, HttpStatus.NOT_ACCEPTABLE);
+  }
+
+  async verifyLogin(id: string): Promise<boolean> {
+    const user = this.usersRepository.findOne({
+      where: {id}
+    });
+
+    if(user) return true;
+
+    throw new HttpException({
+      msg: "Invalid Token",
+      error: "Unauthorized"
+    }, HttpStatus.UNAUTHORIZED);
   }
 }

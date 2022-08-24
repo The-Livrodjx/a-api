@@ -1,4 +1,4 @@
-import * as env from 'dotenv'
+import * as env from 'dotenv';
 
 env.config();
 
@@ -10,4 +10,4 @@ export const mysqlConfig = {
   password: process.env.DB_PASS,
   database: 'aproject',
   synchronize: true,
-}
+};

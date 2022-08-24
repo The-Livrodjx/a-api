@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { consoleTableObj } from './utils/utils';
 import * as ip from 'ip';
 import * as dotenv from 'dotenv';
+import { corsConfig } from './configs/cors.config';
 
 dotenv.config();
 
