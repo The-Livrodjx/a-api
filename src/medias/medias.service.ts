@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMediaDto } from './dto/create-media.dto';
-import { UpdateMediaDto } from './dto/update-media.dto';
+import * as ffmpeg from "fluent-ffmpeg";
 
 @Injectable()
 export class MediasService {
-  create(createMediaDto: CreateMediaDto) {
+  create(createMediaDto: any) {
     return 'This action adds a new media';
   }
 
@@ -16,7 +15,7 @@ export class MediasService {
     return `This action returns a #${id} media`;
   }
 
-  update(id: number, updateMediaDto: UpdateMediaDto) {
+  update(id: number, updateMediaDto: any) {
     return `This action updates a #${id} media`;
   }
 
