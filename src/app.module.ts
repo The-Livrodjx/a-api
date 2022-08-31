@@ -1,3 +1,4 @@
+import { MediaGateway } from './medias/media.gateway';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
@@ -6,6 +7,7 @@ import { mysqlConfig } from './configs/mysql.config';
 import { UsersModule } from './users/users.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MediasModule } from './medias/medias.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -24,9 +26,10 @@ import { MediasModule } from './medias/medias.module';
       entities: [__dirname + '/**/*.entity{.ts,.js}']
     }),
     UsersModule,
-    MediasModule
+    MediasModule,
+    AuthModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [MediaGateway, AppService],
 })
-export class AppModule {}
+export class AppModule { }

@@ -1,25 +1,28 @@
 import { Injectable } from '@nestjs/common';
-import * as ffmpeg from "fluent-ffmpeg";
+import { InjectRepository } from '@nestjs/typeorm';
+import { DeepPartial, Repository } from 'typeorm';
+import { CreateMedia } from './dto/media.dto';
+import { Medias } from './entities/media.entity';
 
 @Injectable()
 export class MediasService {
-  create(createMediaDto: any) {
-    return 'This action adds a new media';
-  }
 
-  findAll() {
-    return `This action returns all medias`;
-  }
+  constructor(
+    @InjectRepository(Medias)
+    private readonly mediasRepository: Repository<Medias>
+  ) {};
 
-  findOne(id: number) {
-    return `This action returns a #${id} media`;
-  }
+  async create(file: CreateMedia) {
+    
+    let payload: Medias = {
+      file_name: file.filename,
+      file_path: file.path,
+      file_length: file.size,
+      file_type: file.mimetype
+    };
 
-  update(id: number, updateMediaDto: any) {
-    return `This action updates a #${id} media`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} media`;
-  }
+    return await this.mediasRepository
+    .save(this.mediasRepository
+      .create((payload as DeepPartial<Medias>)));
+  };
 }

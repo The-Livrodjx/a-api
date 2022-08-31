@@ -2,7 +2,6 @@ import { HttpException, HttpStatus } from '@nestjs/common';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { hashSync } from 'bcrypt';
-import { AuthService } from 'src/auth/auth.service';
 import { DeepPartial, Repository } from 'typeorm';
 import { CreateUserDto, LoginReturn } from './dto/user.dto';
 import { Users } from './entities/user.entity';
@@ -14,7 +13,7 @@ export class UsersService {
   constructor(
     @InjectRepository(Users)
     private usersRepository: Repository<Users>,
-    private authService: AuthService
+    // private authService: AuthService
   ) {};
 
   async create(body: CreateUserDto, ip: string): Promise<LoginReturn> {
@@ -35,10 +34,11 @@ export class UsersService {
       );
 
       return {
-        token: this.authService.jwtSign({
-          email,
-          username: newUser.name,
-        }),
+        // token: this.authService.jwtSign({
+        //   email,
+        //   username: newUser.name,
+        // }),
+        token: "",
         username: newUser.name,
         email: newUser.email
       };
