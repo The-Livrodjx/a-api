@@ -1,21 +1,20 @@
 
 import { Logger } from '@nestjs/common';
-import 
-{ 
-    MessageBody, 
-    SubscribeMessage, 
-    WebSocketGateway, 
-    WebSocketServer, 
-    OnGatewayConnection, 
-    OnGatewayDisconnect, 
-    OnGatewayInit 
+import {
+    MessageBody,
+    SubscribeMessage,
+    WebSocketGateway,
+    WebSocketServer,
+    OnGatewayConnection,
+    OnGatewayDisconnect,
+    OnGatewayInit
 } from '@nestjs/websockets';
 
 const logger: Logger = new Logger('MediaGateway');
 
 @WebSocketGateway(80, { namespace: 'media' })
-export class MediaGateway implements OnGatewayConnection, 
-OnGatewayDisconnect, OnGatewayInit {
+export class MediaGateway implements OnGatewayConnection,
+    OnGatewayDisconnect, OnGatewayInit {
 
     @WebSocketServer()
     server: any;

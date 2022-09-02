@@ -5,11 +5,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Medias } from './entities/media.entity';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Medias])
-  ],
-  controllers: [MediasController],
-  providers: [MediasService],
-  exports: [MediasService]
+    imports: [
+        TypeOrmModule.forFeature([Medias])
+    ],
+    controllers: [MediasController],
+    providers: [MediasService],
+    exports: [MediasService]
 })
-export class MediasModule {}
+export class MediasModule { }
