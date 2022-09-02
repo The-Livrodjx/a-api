@@ -9,15 +9,15 @@ import { corsConfig } from './configs/cors.config';
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const host = ip.address();
-  const PORT = Number(process.env.PORT) || 6969;
+    const app = await NestFactory.create(AppModule);
+    const host = ip.address();
+    const PORT = Number(process.env.PORT) || 6969;
 
-  app.useGlobalPipes(new ValidationPipe());
-  app.enableCors();
-  app.listen(PORT).then(() => consoleTableObj({
-    'Host': host,
-    'Port': PORT
-  }));
+    app.useGlobalPipes(new ValidationPipe());
+    app.enableCors();
+    app.listen(PORT).then(() => consoleTableObj({
+        'Host': host,
+        'Port': PORT
+    }));
 }
 bootstrap();

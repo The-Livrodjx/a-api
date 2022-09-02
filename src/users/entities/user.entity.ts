@@ -2,44 +2,44 @@ import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
 import { v4 as uuid } from 'uuid';
 
 export enum UserRole {
-  ADMIN = 1,
-  MEMBER = 0
+    ADMIN = 1,
+    MEMBER = 0
 };
 
 @Entity()
 export class Users {
 
-  @PrimaryColumn()
-  id: string;
+    @PrimaryColumn()
+    id: string;
 
-  @Column()
-  name: string;
+    @Column()
+    name: string;
 
-  @Column()
-  email: string
-  
-  @Column({select: false})
-  password: string;
+    @Column()
+    email: string
 
-  @Column({ select: false })
-  ip: string;
+    @Column({ select: false })
+    password: string;
 
-  @Column({ default: "" })
-  profile_image: string;
-  
-  @Column({
-    type: "enum",
-    enum: UserRole,
-    default: UserRole.MEMBER
-  })
-  role: UserRole;
+    @Column({ select: false })
+    ip: string;
 
-  @CreateDateColumn()
-  created_at: Date;
+    @Column({ default: "" })
+    profile_image: string;
 
-  constructor() {
-    if(!this.id) {
-      this.id = `${uuid()}`;
+    @Column({
+        type: "enum",
+        enum: UserRole,
+        default: UserRole.MEMBER
+    })
+    role: UserRole;
+
+    @CreateDateColumn()
+    created_at: Date;
+
+    constructor() {
+        if (!this.id) {
+            this.id = `${uuid()}`;
+        }
     }
-  }
 }
