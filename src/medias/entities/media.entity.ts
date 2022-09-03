@@ -1,4 +1,13 @@
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Users } from './../../users/entities/user.entity';
+import { Tags } from "../../tags/entities/tag.entity";
+import {
+    Column,
+    Entity,
+    PrimaryColumn,
+    ManyToMany,
+    JoinTable,
+    ManyToOne
+} from "typeorm";
 import { v4 as uuid } from "uuid";
 
 export enum FilesType {
@@ -15,6 +24,9 @@ export class Medias {
     @PrimaryColumn()
     id?: string;
 
+    @Column({ nullable: true })
+    title?: string;
+
     @Column()
     file_name: string;
 
@@ -27,9 +39,19 @@ export class Medias {
     @Column({ default: FilesType.JPG })
     file_type: FilesType | string;
 
+    @ManyToOne(() => Users, user => user.medias, {
+        cascade: true,
+        onDelete: "SET NULL"
+    })
+    users?: Users
+
+    @ManyToMany(() => Tags)
+    @JoinTable()
+    tags?: Tags[];
+
     constructor() {
         if (!this.id) {
             this.id = uuid();
-        }
-    }
+        };
+    };
 }

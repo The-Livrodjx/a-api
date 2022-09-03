@@ -8,21 +8,47 @@ import {
     Get,
     Param,
     Req,
-    Res
+    Res,
+    Query
 } from '@nestjs/common';
+import { Pagination } from 'nestjs-typeorm-paginate';
 import { MediasService } from './medias.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from "multer";
-import { v4 as uuid } from "uuid";
-import { CreateMedia } from './dto/media.dto';
+import { CreateMedia, IGetMediaById } from './dto/media.dto';
 import { Medias } from './entities/media.entity';
+import { Request, Response } from 'express';
+import { genFileName } from '../utils/utils';
 
 @Controller('medias')
 export class MediasController {
     constructor(private readonly mediasService: MediasService) { }
 
+    @Get("/pagination")
+    async pagination(
+        @Query('page') page: number = 1,
+        @Query('limit') limit: number = 10,
+    ): Promise<Pagination<Medias>> {
+        limit = limit > 100 ? 100 : limit;
+        return this.mediasService.pagination({
+            page,
+            limit
+        });
+    };
+
+    @Get('/getById/:id')
+    getMediaById(
+        @Param('id') id: string
+    ): Promise<IGetMediaById> {
+        return this.mediasService.getMediaById(id);
+    };
+
     @Get('/:filename')
-    getFile(@Param('filename') filename: string, @Req() req: any, @Res() res: any): void {
+    getFile(
+        @Param('filename') filename: string,
+        @Req() req: Request,
+        @Res() res: Response
+    ): Buffer | void {
         this.mediasService.getFileByFilename(filename, req, res);
     };
 
@@ -31,7 +57,7 @@ export class MediasController {
             storage: diskStorage({
                 destination: './tmp',
                 filename(_, file, cb) {
-                    cb(null, `${uuid().replace(/-/g, "")}-${file.originalname.replace(/\s|-/g, '_')}`);
+                    cb(null, genFileName(file.originalname));
                 },
             }),
             fileFilter(_, file, callback) {

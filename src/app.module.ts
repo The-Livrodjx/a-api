@@ -1,13 +1,11 @@
-import { MediaGateway } from './medias/media.gateway';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { mysqlConfig } from './configs/mysql.config';
 import { UsersModule } from './users/users.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { MediasModule } from './medias/medias.module';
 import { AuthModule } from './auth/auth.module';
+import { TagsModule } from './tags/tags.module';
 
 @Module({
     imports: [
@@ -27,9 +25,9 @@ import { AuthModule } from './auth/auth.module';
         }),
         UsersModule,
         MediasModule,
-        AuthModule
+        AuthModule,
+        TagsModule
     ],
-    controllers: [AppController],
-    providers: [MediaGateway, AppService],
+    providers: []
 })
 export class AppModule { }

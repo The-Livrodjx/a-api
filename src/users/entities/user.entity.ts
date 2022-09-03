@@ -1,4 +1,11 @@
-import { Column, CreateDateColumn, Entity, PrimaryColumn } from "typeorm";
+import {
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryColumn,
+    OneToMany
+} from "typeorm";
+import { Medias } from './../../medias/entities/media.entity';
 import { v4 as uuid } from 'uuid';
 
 export enum UserRole {
@@ -36,6 +43,11 @@ export class Users {
 
     @CreateDateColumn()
     created_at: Date;
+
+    @OneToMany(() => Medias, media => media.users, {
+        cascade: ['insert', 'update']
+    })
+    medias?: Medias[]
 
     constructor() {
         if (!this.id) {

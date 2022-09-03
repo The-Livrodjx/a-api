@@ -16,6 +16,7 @@ export class CreateUserDto {
     password: string;
 
     ip?: string;
+    role?: number;
 }
 
 export class UserLogin {

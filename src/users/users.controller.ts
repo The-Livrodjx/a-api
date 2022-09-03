@@ -1,3 +1,4 @@
+import { AuthService } from '../auth/auth.service';
 import { Controller, Post, Body, UseGuards, Get, Ip, Req } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
@@ -10,7 +11,7 @@ import { UsersService } from './users.service';
 export class UsersController {
     constructor(
         private readonly usersService: UsersService,
-        // private readonly authService: AuthService
+        private readonly authService: AuthService
     ) { }
 
     @UseGuards(AuthGuard('jwt'))
@@ -30,18 +31,21 @@ export class UsersController {
         return await this.usersService.create(createUserDto, ip);
     }
 
-    // @UseGuards(ThrottlerUserProxy)
-    // @Post('/login')
-    // async login(@Body() body: UserLogin): Promise<LoginReturn> {
-    //   return await this.authService.login(body);
-    // }
+    @UseGuards(ThrottlerUserProxy)
+    @Post('/login')
+    async login(
+        @Body() body: UserLogin,
+        @RealIp() ip: string
+    ): Promise<LoginReturn> {
+      return await this.authService.login(body, ip);
+    }
 
-    // @Get('jwt')
-    // async validateJwt(@Req() req: Request): Promise<boolean> {
-    //   const { authorization } = req.headers;
-    //   if(authorization && authorization.split(" ")[0] === 'Bearer') {
-    //     return await this.authService.validateJwt(authorization);
-    //   };
-    //   return false;
-    // }
+    @Get('jwt')
+    async validateJwt(@Req() req: Request): Promise<boolean> {
+      const { authorization } = req.headers;
+      if(authorization && authorization.split(" ")[0] === 'Bearer') {
+        return await this.authService.validateJwt(authorization);
+      };
+      return false;
+    }
 }

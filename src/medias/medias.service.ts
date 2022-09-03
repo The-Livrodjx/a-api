@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { DeepPartial, Repository } from 'typeorm';
 import { extname } from 'path';
-import { getType as getTypeFromExt, getExtension as getExtFromType } from 'mime';
-
-import { CreateMedia } from './dto/media.dto';
+import { getType as getTypeFromExt } from 'mime';
+import { CreateMedia, IGetMediaById } from './dto/media.dto';
 import { Medias } from './entities/media.entity';
 import { createReadStream, readFileSync, statSync } from 'fs';
+import { Request, Response } from 'express';
+import { paginate, IPaginationOptions, Pagination } from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class MediasService {
@@ -15,7 +16,30 @@ export class MediasService {
         private readonly mediasRepository: Repository<Medias>
     ) { };
 
-    async create(file: CreateMedia) {
+    async pagination(options: IPaginationOptions): Promise<Pagination<Medias>> {
+        const queryBuilder = this.mediasRepository.createQueryBuilder();
+
+        return paginate<Medias>(queryBuilder, options);
+    };
+
+    async getMediaById(id: string): Promise<IGetMediaById> {
+        let media = await this.mediasRepository.findOne({
+            where: {id: id},
+            relations: {
+                tags: true,
+                users: true
+            }
+        });
+
+        if(!media) throw new HttpException({
+            msg: "Media not found",
+            error: "Not found"
+        }, HttpStatus.NOT_FOUND);
+
+        return media;
+    };
+
+    async create(file: CreateMedia): Promise<Medias> {
 
         let payload: Medias = {
             file_name: file.filename,
@@ -29,7 +53,7 @@ export class MediasService {
                 .create((payload as DeepPartial<Medias>)));
     };
 
-    getFileByFilename(filename: string, req: any, res: any) {
+    getFileByFilename(filename: string, req: Request, res: Response) {
         const filePath = `${process.env.TEMP_FOLDER || "./tmp"}/${filename}`;
         const fileExt = extname(filename);
         const mimetype = getTypeFromExt(fileExt);

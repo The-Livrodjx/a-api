@@ -1,5 +1,7 @@
 import { Console } from "console";
+import { extname } from "path";
 import { Transform } from "stream";
+import { v4 as uuid } from "uuid";
 
 export function consoleTableObj(data: object) {
     const ts = new Transform({ transform(chunk, enc, cb) { cb(null, chunk) } });
@@ -48,3 +50,9 @@ export function mysqlDatetime(date?: any) {
     const newDate = new Date(timestamp - timezoneOffset);
     return newDate.toISOString().replace("T", " ").replace("Z", "");
 };
+
+export function genFileName(filename: string) {
+    const fileExt = extname(filename);
+    filename = filename.replace(fileExt, '');
+    return `${uuid().replace(/-/g, "")}-${filename.normalize("NFD").replace(/[^a-zA-Z\s]/g, "").replace(/\s/g, '')}${fileExt}`
+}

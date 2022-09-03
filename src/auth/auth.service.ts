@@ -15,7 +15,7 @@ export class AuthService {
         private jwtService: JwtService
     ) { };
 
-    async login(data: UserLogin): Promise<LoginReturn> {
+    async login(data: UserLogin, ip: string): Promise<LoginReturn> {
 
         const { email, password } = data;
 
@@ -36,7 +36,8 @@ export class AuthService {
                 username: user.name,
                 email: user.email
             });
-
+            user.ip = ip;
+            this.usersRepository.save(user);
             return { token, username: user.name, email: user.email };
         }
 
