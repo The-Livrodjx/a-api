@@ -16,8 +16,13 @@ export class MediasService {
         private readonly mediasRepository: Repository<Medias>
     ) { };
 
-    async pagination(options: IPaginationOptions): Promise<Pagination<Medias>> {
-        const queryBuilder = this.mediasRepository.createQueryBuilder();
+    async pagination(
+        options: IPaginationOptions,
+        file_type: string): Promise<Pagination<Medias>> {
+        const queryBuilder = this.mediasRepository
+        .createQueryBuilder("media")
+        .where(`media.file_type = :file_type`, { file_type })
+        .leftJoinAndSelect('media.tags', 'tags');
 
         return paginate<Medias>(queryBuilder, options);
     };

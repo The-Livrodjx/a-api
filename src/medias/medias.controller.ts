@@ -28,12 +28,13 @@ export class MediasController {
     async pagination(
         @Query('page') page: number = 1,
         @Query('limit') limit: number = 10,
+        @Query('filter') filter: string = "video/mp4"
     ): Promise<Pagination<Medias>> {
         limit = limit > 100 ? 100 : limit;
         return this.mediasService.pagination({
             page,
             limit
-        });
+        },  filter);
     };
 
     @Get('/getById/:id')

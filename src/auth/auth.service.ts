@@ -21,7 +21,7 @@ export class AuthService {
 
         const user = await this.usersRepository.findOne({
             where: { email: email },
-            select: ['id', 'name', 'email', 'password']
+            select: ['id', 'name', 'email', 'password', 'profile_image']
         });
 
         if (!user)
@@ -38,7 +38,11 @@ export class AuthService {
             });
             user.ip = ip;
             this.usersRepository.save(user);
-            return { token, username: user.name, email: user.email };
+            return { token,
+                username: user.name,
+                email: user.email,
+                profile_image: user.profile_image
+            };
         }
 
         throw new HttpException({

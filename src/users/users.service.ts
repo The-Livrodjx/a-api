@@ -42,7 +42,7 @@ export class UsersService {
                 username: newUser.name,
                 email: newUser.email
             };
-        }
+        };
 
         throw new HttpException({
             msg: "User already exists",

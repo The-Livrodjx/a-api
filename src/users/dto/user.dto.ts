@@ -34,4 +34,5 @@ export interface LoginReturn {
     token?: string;
     email: string;
     username: string;
+    profile_image?: string;
 }
