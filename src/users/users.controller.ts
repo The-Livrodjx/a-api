@@ -1,9 +1,9 @@
 import { AuthService } from '../auth/auth.service';
-import { Controller, Post, Body, UseGuards, Get, Ip, Req } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Get, Ip, Req, HttpException, HttpStatus } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Request } from 'express';
 import { RealIp } from 'nestjs-real-ip';
-import { CreateUserDto, LoginReturn, UserLogin } from './dto/user.dto';
+import { ChangeAvatar, CreateUserDto, LoginReturn, UserLogin } from './dto/user.dto';
 import { ThrottlerUserProxy } from './throttler-user-proxy.guard';
 import { UsersService } from './users.service';
 
@@ -31,21 +31,34 @@ export class UsersController {
         return await this.usersService.create(createUserDto, ip);
     }
 
+    @UseGuards(AuthGuard('jwt'))
+    @UseGuards(ThrottlerUserProxy)
+    @Post('/changeAvatar')
+    async changeAvatar(
+        @Body() body: ChangeAvatar
+    ): Promise<ChangeAvatar> {
+        // if (body.profile_image.length > 255) throw new HttpException({
+        //     msg: "Invalid Token",
+        //     error: "Unauthorized"
+        // }, HttpStatus.UNAUTHORIZED);
+        return this.usersService.changeUserAvatar(body);
+    }
+
     @UseGuards(ThrottlerUserProxy)
     @Post('/login')
     async login(
         @Body() body: UserLogin,
         @RealIp() ip: string
     ): Promise<LoginReturn> {
-      return await this.authService.login(body, ip);
+        return await this.authService.login(body, ip);
     }
 
-    @Get('jwt')
+    @Get('/jwt')
     async validateJwt(@Req() req: Request): Promise<boolean> {
-      const { authorization } = req.headers;
-      if(authorization && authorization.split(" ")[0] === 'Bearer') {
-        return await this.authService.validateJwt(authorization);
-      };
-      return false;
+        const { authorization } = req.headers;
+        if (authorization && authorization.split(" ")[0] === 'Bearer') {
+            return await this.authService.validateJwt(authorization);
+        };
+        return false;
     }
 }

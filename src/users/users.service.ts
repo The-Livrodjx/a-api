@@ -4,7 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { hashSync } from 'bcrypt';
 import { AuthService } from '../auth/auth.service';
 import { DeepPartial, Repository } from 'typeorm';
-import { CreateUserDto, LoginReturn } from './dto/user.dto';
+import { ChangeAvatar, CreateUserDto, LoginReturn } from './dto/user.dto';
 import { Users } from './entities/user.entity';
 
 
@@ -40,7 +40,8 @@ export class UsersService {
                   username: newUser.name,
                 }),
                 username: newUser.name,
-                email: newUser.email
+                email: newUser.email,
+                profile_image: newUser.profile_image
             };
         };
 
@@ -49,6 +50,24 @@ export class UsersService {
             error: "Not acceptable"
         }, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    async changeUserAvatar(body: ChangeAvatar): Promise<ChangeAvatar> {
+        const { email, profile_image } = body;
+        const user = await this.usersRepository.findOne({
+            where: {email}
+        });
+
+        if(user) {
+            user.profile_image = profile_image;
+            this.usersRepository.save(user);
+            return { profile_image };
+        };
+
+        throw new HttpException({
+            msg: "User not found",
+            error: "Not found"
+        }, HttpStatus.NOT_FOUND);
+    };
 
     async verifyLogin(id: string): Promise<boolean> {
         const user = this.usersRepository.findOne({

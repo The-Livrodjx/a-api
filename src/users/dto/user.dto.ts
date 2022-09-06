@@ -28,7 +28,10 @@ export class UserLogin {
     @IsNotEmpty({ message: "Password cannot be empty" })
     password: string;
 }
-
+export interface ChangeAvatar {
+    email?: string;
+    profile_image: string;
+}
 export interface LoginReturn {
     id?: string;
     token?: string;

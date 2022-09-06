@@ -31,7 +31,7 @@ export class Users {
     @Column({ select: false })
     ip: string;
 
-    @Column({ default: "" })
+    @Column({ nullable: true, type: "text" })
     profile_image: string;
 
     @Column({
