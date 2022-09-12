@@ -26,10 +26,10 @@ export class Users {
     email: string
 
     @Column({ select: false })
-    password: string;
+    password?: string;
 
     @Column({ select: false })
-    ip: string;
+    ip?: string;
 
     @Column({ nullable: true, type: "text" })
     profile_image: string;

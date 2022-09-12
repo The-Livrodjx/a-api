@@ -12,6 +12,17 @@ export class TagsService {
         private readonly tagsRepository: Repository<Tags>
     ) { };
 
+    async getAll() {
+        let tags = await this.tagsRepository.find();
+
+        if(tags) return tags;
+
+        throw new HttpException({
+            msg: "None tag was found",
+            error: "Not found"
+        }, HttpStatus.NOT_FOUND);
+    };
+
     async create(body: CreateTagDto): Promise<Tags> {
 
         const { name } = body;

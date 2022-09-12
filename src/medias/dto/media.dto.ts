@@ -6,8 +6,12 @@ export interface CreateMedia {
     path: string;
     size: number;
     mimetype: string;
+}
+
+export interface CreateMediaBody {
     title?: string;
-    description?: string;
+    tags?: string[];
+    users?: Users;
 }
 
 export interface IGetMediaById {

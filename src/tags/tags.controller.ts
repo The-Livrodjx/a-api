@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { TagsService } from './tags.service';
 import { CreateTagDto, ITags } from './dto/tag.dto';
 
@@ -7,6 +7,11 @@ export class TagsController {
     constructor(
         private readonly tagsService: TagsService
     ) { };
+
+    @Get('')
+    async getAll() {
+        return await this.tagsService.getAll();
+    };
 
     @Post('/create')
     async create(@Body() body: CreateTagDto): Promise<ITags> {

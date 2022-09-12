@@ -9,7 +9,8 @@ import {
     Param,
     Req,
     Res,
-    Query
+    Query,
+    Body
 } from '@nestjs/common';
 import { Pagination } from 'nestjs-typeorm-paginate';
 import { MediasService } from './medias.service';
@@ -27,7 +28,7 @@ export class MediasController {
     @Get("/pagination")
     async pagination(
         @Query('page') page: number = 1,
-        @Query('limit') limit: number = 10,
+        @Query('limit') limit: number = 9,
         @Query('filter') filter: string = "video/mp4"
     ): Promise<Pagination<Medias>> {
         limit = limit > 100 ? 100 : limit;
@@ -77,7 +78,11 @@ export class MediasController {
         })
     )
     @Post()
-    async create(@UploadedFile() file: CreateMedia): Promise<Medias> {
-        return this.mediasService.create(file);
+    async create(
+        @UploadedFile() file: CreateMedia,
+        @Body() body: {body: string}
+    ): Promise<Medias> {
+
+        return this.mediasService.create(file, JSON.parse(body.body));
     }
 }
