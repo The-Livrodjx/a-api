@@ -43,7 +43,7 @@ export class Medias {
         cascade: true,
         onDelete: "SET NULL"
     })
-    users?: Users
+    users?: Users;
 
     @ManyToMany(() => Tags)
     @JoinTable()

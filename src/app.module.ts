@@ -6,6 +6,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { MediasModule } from './medias/medias.module';
 import { AuthModule } from './auth/auth.module';
 import { TagsModule } from './tags/tags.module';
+import { MangasModule } from './mangas/mangas.module';
 
 @Module({
     imports: [
@@ -26,8 +27,9 @@ import { TagsModule } from './tags/tags.module';
         UsersModule,
         MediasModule,
         AuthModule,
-        TagsModule
+        TagsModule,
+        MangasModule
     ],
     providers: []
 })
-export class AppModule { }
+export class AppModule { };

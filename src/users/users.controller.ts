@@ -37,10 +37,7 @@ export class UsersController {
     async changeAvatar(
         @Body() body: ChangeAvatar
     ): Promise<ChangeAvatar> {
-        // if (body.profile_image.length > 255) throw new HttpException({
-        //     msg: "Invalid Token",
-        //     error: "Unauthorized"
-        // }, HttpStatus.UNAUTHORIZED);
+
         return this.usersService.changeUserAvatar(body);
     }
 
