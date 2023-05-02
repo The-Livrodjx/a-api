@@ -23,7 +23,7 @@ export class Mangas {
     @Column()
     description: string;
 
-    @Column()
+    @Column({type: "text"})
     type: string;
 
     @Column()

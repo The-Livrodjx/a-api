@@ -7,6 +7,7 @@ import { MediasModule } from './medias/medias.module';
 import { AuthModule } from './auth/auth.module';
 import { TagsModule } from './tags/tags.module';
 import { MangasModule } from './mangas/mangas.module';
+import { OpenAIAPIModule } from './open-ai/open-ai.module';
 
 @Module({
     imports: [
@@ -28,7 +29,8 @@ import { MangasModule } from './mangas/mangas.module';
         MediasModule,
         AuthModule,
         TagsModule,
-        MangasModule
+        MangasModule,
+        OpenAIAPIModule
     ],
     providers: []
 })

@@ -6,10 +6,11 @@ import {
     HttpException,
     HttpStatus,
     UploadedFiles,
-    UseGuards
+    UseGuards,
+    Param,
+    Get
 } from '@nestjs/common';
 import { MangasService } from './mangas.service';
-import { CreateMangaDto } from './dto/create-manga.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { genFileName } from '../utils/utils';
@@ -45,8 +46,17 @@ export class MangasController {
         @UploadedFiles() files: Express.Multer.File[],
         @Body() body: {body: string}
     ) {
-        console.log(files);
-        console.log(JSON.parse(body.body));
+
         return await this.mangaService.create(files, JSON.parse(body.body));
     };
+
+    @Post('/payloadManga/:id')
+    async payloadManga(@Param('id') id: number) {
+        return await this.mangaService.payloadMangas(id);
+    }
+
+    @Get('manga/:id')
+    async webscraping(@Param('id') id: number) {
+        return this.mangaService.webscrapping(id);
+    }
 }
